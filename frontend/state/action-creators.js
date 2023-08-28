@@ -39,9 +39,13 @@ export function setMessage(message) {
 
 export function setQuiz() {}
 
-export function inputChange() {}
+export function inputChange(e) {
+  return { type: INPUT_CHANGE, payload: e.target };
+}
 
-export function resetForm() {}
+export function resetForm() {
+  return { type: RESET_FORM };
+}
 
 // ❗ Async action creators
 export function fetchQuiz() {
@@ -76,20 +80,32 @@ export function postAnswer(answer) {
     // - Dispatch an action to set the server message to state
     // - Dispatch the fetching of the next quiz
     axios
-      .post("http://localhost:3000/api/quiz/answer", answer)
-      .then(({ data }) =>
-        dispatch({ type: SET_INFO_MESSAGE, payload: data.message })
-          .then((res) => dispatch({ type: SET_QUIZ_INTO_STATE }))
-          .catch((err) => dispatch({ type: SET_INFO_MESSAGE, payload: err }))
-      );
+      .post("http://localhost:9000/api/quiz/answer", answer)
+      .then(({ data }) => {
+        dispatch({ type: SET_INFO_MESSAGE, payload: data.message });
+      })
+      .catch((err) => dispatch({ type: SET_INFO_MESSAGE, payload: err }));
   };
 }
 
-export function postQuiz() {
+export function postQuiz(newQuiz) {
   return function (dispatch) {
     // On successful POST:
     // - Dispatch the correct message to the the appropriate state
     // - Dispatch the resetting of the form
+    axios
+      .post("http://localhost:9000/api/quiz/new", newQuiz)
+      .then((res) => {
+        console.log("reached here");
+        console.log(res);
+        dispatch({
+          type: SET_INFO_MESSAGE,
+          payload: `Congrats: "${newQuiz.question_text}" is a great question!`,
+        });
+      })
+      .catch((err) =>
+        dispatch({ type: SET_INFO_MESSAGE, payload: "ERROR POSTING NEW QUIZ" })
+      );
   };
 }
 // ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state

@@ -15,23 +15,18 @@ function Quiz(props) {
     selectedAnswer,
     selectAnswer: selectAnswerAction,
     setMessage,
+    postAnswer,
   } = props;
   console.log(activeQuiz);
   useEffect(() => {
-    fetchQuiz();
+    if (!activeQuiz) {
+      fetchQuiz();
+    }
   }, []);
 
   const submit = () => {
+    postAnswer({ quiz_id: activeQuiz.quiz_id, answer_id: selectedAnswer });
     fetchQuiz();
-
-    if (selectedAnswer) {
-      const correctAnswer = activeQuiz.answers[0].answer_id;
-      if (correctAnswer == selectedAnswer) {
-        setMessage("Nice Job! That was the correct answer");
-      } else {
-        setMessage("What a shame! That was the incorrect answer");
-      }
-    }
   };
 
   return (
