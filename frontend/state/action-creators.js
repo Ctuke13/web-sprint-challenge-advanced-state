@@ -83,6 +83,7 @@ export function postAnswer(answer) {
       .post("http://localhost:9000/api/quiz/answer", answer)
       .then(({ data }) => {
         dispatch({ type: SET_INFO_MESSAGE, payload: data.message });
+        dispatch(fetchQuiz());
       })
       .catch((err) => dispatch({ type: SET_INFO_MESSAGE, payload: err }));
   };
@@ -96,8 +97,6 @@ export function postQuiz(newQuiz) {
     axios
       .post("http://localhost:9000/api/quiz/new", newQuiz)
       .then((res) => {
-        console.log("reached here");
-        console.log(res);
         dispatch({
           type: SET_INFO_MESSAGE,
           payload: `Congrats: "${newQuiz.question_text}" is a great question!`,

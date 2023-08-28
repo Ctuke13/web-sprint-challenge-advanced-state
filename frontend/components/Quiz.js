@@ -26,7 +26,6 @@ function Quiz(props) {
 
   const submit = () => {
     postAnswer({ quiz_id: activeQuiz.quiz_id, answer_id: selectedAnswer });
-    fetchQuiz();
   };
 
   return (
